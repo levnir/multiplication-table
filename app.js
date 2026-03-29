@@ -1115,8 +1115,13 @@ const firebaseConfig = {
     appId: "1:940068097753:web:bab5a4626645cccf08b8c8"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+let db = null;
+try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+} catch (e) {
+    console.warn('Firebase unavailable, falling back to localStorage:', e);
+}
 const DB_PATH = 'abigail';
 
 // Per-number initial difficulty (index 0 = number 1, index 9 = number 10)
@@ -1151,7 +1156,7 @@ function saveState() {
         console.warn('localStorage save failed:', e);
     }
     // Write to Firebase (fire-and-forget)
-    db.ref(DB_PATH).set(payload).catch(e => console.warn('Firebase save failed:', e));
+    if (db) db.ref(DB_PATH).set(payload).catch(e => console.warn('Firebase save failed:', e));
 }
 
 function restoreData(data) {
@@ -1173,6 +1178,7 @@ function restoreData(data) {
 async function loadState() {
     // Try Firebase first (works across all devices)
     try {
+        if (!db) throw new Error('Firebase not initialised');
         const snapshot = await db.ref(DB_PATH).get();
         if (snapshot.exists()) {
             restoreData(snapshot.val());
@@ -1529,11 +1535,11 @@ function renderHeatmap() {
 
 function openHeatmap() {
     renderHeatmap();
-    elements.heatmapModal.classList.remove('hidden');
+    elements.heatmapModal.style.display = 'flex';
 }
 
 function closeHeatmap() {
-    elements.heatmapModal.classList.add('hidden');
+    elements.heatmapModal.style.display = 'none';
 }
 
 // ========================================
