@@ -28,11 +28,11 @@
     --number-gradient-2: #f5576c;
     
     /* Spacing */
-    --space-xs: 0.5rem;
-    --space-sm: 1rem;
-    --space-md: 1.5rem;
-    --space-lg: 2rem;
-    --space-xl: 3rem;
+    --space-xs: 0.3rem;
+    --space-sm: 0.5rem;
+    --space-md: 0.75rem;
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
     
     /* Border radius */
     --radius-sm: 12px;
@@ -166,8 +166,8 @@ body {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 500px;
-    padding: var(--space-md);
+    max-width: 400px;
+    padding: var(--space-sm);
 }
 
 /* ========================================
@@ -212,8 +212,8 @@ body {
 }
 
 .mascot img {
-    max-width: 280px;
-    max-height: 35vh;
+    max-width: 150px;
+    max-height: 18vh;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -227,7 +227,7 @@ body {
 }
 
 .welcome-title {
-    font-size: 2.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
@@ -237,7 +237,7 @@ body {
 }
 
 .welcome-subtitle {
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--secondary);
     margin-bottom: var(--space-sm);
@@ -250,7 +250,7 @@ body {
 }
 
 .welcome-text {
-    font-size: 1.2rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     margin-bottom: var(--space-lg);
 }
@@ -266,7 +266,7 @@ body {
     gap: var(--space-sm);
     padding: var(--space-md) var(--space-lg);
     font-family: inherit;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
     border: none;
     border-radius: var(--radius-md);
@@ -326,7 +326,7 @@ body {
 }
 
 .btn-emoji {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
 }
 
 /* ========================================
@@ -400,17 +400,17 @@ body {
 }
 
 .stat-icon {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
 }
 
 .stat-label {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--text-secondary);
     font-weight: 500;
 }
 
 .stat-value {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     font-weight: 800;
     color: var(--primary);
 }
@@ -454,14 +454,14 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--space-xs);
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: var(--space-sm);
 }
 
 .question-emoji {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     animation: wiggle 3s infinite;
 }
 
@@ -476,7 +476,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: var(--space-md);
     flex-wrap: wrap;
@@ -487,7 +487,7 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    min-width: 60px;
+    min-width: 40px;
     text-align: center;
 }
 
@@ -515,9 +515,9 @@ body {
 .answer-input {
     flex: 1;
     min-width: 0;
-    padding: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
     font-family: inherit;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
     text-align: center;
     border: 3px solid #e0e0e0;
@@ -572,7 +572,7 @@ body {
     gap: var(--space-xs);
     padding: var(--space-sm);
     border-radius: var(--radius-md);
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     animation: slideUp 0.3s ease;
 }
@@ -603,7 +603,7 @@ body {
 }
 
 .feedback-emoji {
-    font-size: 2rem;
+    font-size: 1.4rem;
 }
 
 /* ========================================
@@ -613,15 +613,15 @@ body {
 .number-pad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    gap: 4px;
     margin-top: var(--space-sm);
     direction: ltr; /* Keep standard numpad layout in RTL pages */
 }
 
 .num-btn {
-    padding: 0.6rem;
+    padding: 0.35rem;
     font-family: inherit;
-    font-size: 1.3rem;
+    font-size: 0.95rem;
     font-weight: 700;
     background: var(--card-bg);
     touch-action: manipulation; /* Disable 300ms touch delay */
@@ -680,7 +680,7 @@ body {
     color: white;
     padding: var(--space-lg) var(--space-xl);
     border-radius: var(--radius-lg);
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 800;
     text-align: center;
     z-index: 100;
@@ -736,7 +736,7 @@ body {
 }
 
 .timer-display {
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: 800;
     min-width: 2.2ch;
     text-align: center;
@@ -749,19 +749,19 @@ body {
 .timer-slow   { color: var(--error);   }
 
 .timer-unit {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     font-weight: 500;
     color: var(--text-secondary);
 }
 
 .pause-btn {
-    padding: 0.45rem 1rem;
+    padding: 0.3rem 0.7rem;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
     border: none;
     border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -950,50 +950,50 @@ body {
    RESPONSIVE
 ======================================== */
 
-@media (max-width: 500px) {
+@media (max-width: 400px) {
     .container {
-        padding: var(--space-sm);
+        padding: var(--space-xs);
     }
-    
+
     .question-equation {
-        font-size: 2.2rem;
+        font-size: 1.5rem;
     }
-    
+
     .welcome-title {
-        font-size: 2rem;
-    }
-    
-    .mascot img {
-        max-width: 220px;
-        max-height: 30vh;
-    }
-    
-    .num-btn {
-        padding: 0.75rem;
         font-size: 1.3rem;
+    }
+
+    .mascot img {
+        max-width: 120px;
+        max-height: 15vh;
+    }
+
+    .num-btn {
+        padding: 0.3rem;
+        font-size: 0.85rem;
     }
 }
 
-@media (max-height: 700px) {
+@media (max-height: 600px) {
     .welcome-content {
-        padding: var(--space-lg);
-    }
-    
-    .mascot {
-        margin-bottom: var(--space-sm);
-    }
-    
-    .mascot img {
-        max-width: 160px;
-        max-height: 25vh;
-    }
-    
-    .question-card {
         padding: var(--space-md);
     }
-    
+
+    .mascot {
+        margin-bottom: var(--space-xs);
+    }
+
+    .mascot img {
+        max-width: 100px;
+        max-height: 12vh;
+    }
+
+    .question-card {
+        padding: var(--space-sm);
+    }
+
     .question-equation {
-        font-size: 2.5rem;
-        margin-bottom: var(--space-md);
+        font-size: 1.6rem;
+        margin-bottom: var(--space-sm);
     }
 }
