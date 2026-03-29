@@ -1159,15 +1159,28 @@ function saveState() {
     if (db) db.ref(DB_PATH).set(payload).catch(e => console.warn('Firebase save failed:', e));
 }
 
+// Firebase Realtime Database stores JS arrays as objects with numeric string keys.
+// This converts either format back to a plain JS array.
+function toArray(val) {
+    if (Array.isArray(val)) return val;
+    const keys = Object.keys(val).map(Number).sort((a, b) => a - b);
+    return keys.map(k => val[k]);
+}
+
 function restoreData(data) {
-    if (
-        Array.isArray(data.weights) &&
-        data.weights.length === 10 &&
-        data.weights.every(row => Array.isArray(row) && row.length === 10 &&
-            row.every(v => typeof v === 'number' && isFinite(v)))
-    ) {
-        weights = data.weights;
-    } else {
+    try {
+        const w = toArray(data.weights).map(row => toArray(row));
+        if (
+            w.length === 10 &&
+            w.every(row => row.length === 10 &&
+                row.every(v => typeof v === 'number' && isFinite(v)))
+        ) {
+            weights = w;
+        } else {
+            initWeights();
+        }
+    } catch (e) {
+        console.warn('restoreData: invalid weights, resetting', e);
         initWeights();
     }
     if (typeof data.score === 'number')        gameState.score        = data.score;
@@ -1232,13 +1245,13 @@ function updateWeight(i, j, responseTimeSec, wrongAttempts) {
     let multiplier;
 
     if (wrongAttempts === 0) {
-        // First-try correct: sqrt(t/TARGET) crosses 1.0 exactly at TARGET_TIME seconds.
-        // Fast (<5s) → multiplier < 1 → weight decreases (question is mastered).
-        // Slow (>5s) → multiplier > 1 → weight increases (needs speed practice).
-        multiplier = Math.max(0.4, Math.sqrt(t / TARGET_TIME));
+        // Crosses 1.0 at TARGET_TIME. Power 0.6 is steeper than sqrt, so mastered
+        // questions decay faster and slow ones climb faster.
+        // At 2s: ~0.48 (big decrease)  At 5s: 1.0 (neutral)  At 10s: ~1.74 (increase)
+        multiplier = Math.max(0.3, Math.pow(t / TARGET_TIME, 0.6));
     } else {
-        // Had wrong attempts: always increase weight, more for each mistake and more time taken.
-        multiplier = Math.min(1.2 + wrongAttempts * 0.3 + (t / TARGET_TIME) * 0.1, 3.0);
+        // Wrong attempts: always increase, scaled by mistake count and time.
+        multiplier = Math.min(1.5 + wrongAttempts * 0.5 + (t / TARGET_TIME) * 0.2, 4.0);
     }
 
     weights[i][j] = Math.max(0.5, Math.min(weights[i][j] * multiplier, 50));
