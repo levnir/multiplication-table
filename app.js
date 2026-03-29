@@ -1311,7 +1311,11 @@ const elements = {
     questionCard: document.getElementById('question-card'),
     streakMilestone: document.getElementById('streak-milestone'),
     numberPad: document.querySelector('.number-pad'),
-    soundToggleBtn: document.getElementById('sound-toggle-btn')
+    soundToggleBtn: document.getElementById('sound-toggle-btn'),
+    heatmapBtn: document.getElementById('heatmap-btn'),
+    heatmapModal: document.getElementById('heatmap-modal'),
+    heatmapClose: document.getElementById('heatmap-close'),
+    heatmapGrid: document.getElementById('heatmap-grid')
 };
 
 // ========================================
@@ -1470,6 +1474,69 @@ async function startGame() {
 }
 
 // ========================================
+// HEATMAP
+// ========================================
+
+function renderHeatmap() {
+    const grid = elements.heatmapGrid;
+    grid.innerHTML = '';
+
+    // Compute min/max for color normalization
+    let minW = Infinity, maxW = -Infinity;
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            minW = Math.min(minW, weights[i][j]);
+            maxW = Math.max(maxW, weights[i][j]);
+        }
+    }
+
+    // Corner (empty)
+    const corner = document.createElement('div');
+    corner.className = 'heatmap-label';
+    grid.appendChild(corner);
+
+    // Column headers: 1–10
+    for (let j = 0; j < 10; j++) {
+        const lbl = document.createElement('div');
+        lbl.className = 'heatmap-label';
+        lbl.textContent = j + 1;
+        grid.appendChild(lbl);
+    }
+
+    // Rows
+    for (let i = 0; i < 10; i++) {
+        // Row header
+        const rowLbl = document.createElement('div');
+        rowLbl.className = 'heatmap-label';
+        rowLbl.textContent = i + 1;
+        grid.appendChild(rowLbl);
+
+        // Cells
+        for (let j = 0; j < 10; j++) {
+            const w = weights[i][j];
+            const normalized = maxW > minW ? (w - minW) / (maxW - minW) : 0.5;
+            const hue = Math.round(120 * (1 - normalized)); // 120=green → 0=red
+
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            cell.style.backgroundColor = `hsl(${hue}, 65%, 50%)`;
+            cell.textContent = (i + 1) * (j + 1);
+            cell.title = `${i + 1} × ${j + 1} = ${(i + 1) * (j + 1)}`;
+            grid.appendChild(cell);
+        }
+    }
+}
+
+function openHeatmap() {
+    renderHeatmap();
+    elements.heatmapModal.classList.remove('hidden');
+}
+
+function closeHeatmap() {
+    elements.heatmapModal.classList.add('hidden');
+}
+
+// ========================================
 // EVENT LISTENERS
 // ========================================
 
@@ -1548,8 +1615,16 @@ elements.soundToggleBtn.addEventListener('click', () => {
     }, 100);
 });
 
+// Heatmap open / close
+elements.heatmapBtn.addEventListener('click', openHeatmap);
+elements.heatmapClose.addEventListener('click', closeHeatmap);
+elements.heatmapModal.addEventListener('click', (e) => {
+    if (e.target === elements.heatmapModal) closeHeatmap();
+});
+
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeHeatmap();
     // Start game on Enter from welcome screen
     if (elements.welcomeScreen.classList.contains('active') && e.key === 'Enter') {
         startGame();

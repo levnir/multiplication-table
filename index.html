@@ -50,6 +50,7 @@
                     <span class="toggle-option active" data-value="fun">🎉 כיפיים</span>
                     <span class="toggle-option" data-value="original">🎹 מקוריים</span>
                 </button>
+                <button id="heatmap-btn" class="heatmap-btn" title="הצג התפלגות שאלות">📊</button>
             </div>
 
             <!-- Stats bar -->
@@ -117,6 +118,23 @@
             <div id="streak-milestone" class="streak-milestone hidden">
                 <span class="milestone-text"></span>
             </div>
+        </div>
+    </div>
+
+    <!-- Heatmap modal -->
+    <div id="heatmap-modal" class="heatmap-modal hidden">
+        <div class="heatmap-content">
+            <div class="heatmap-header">
+                <h3 class="heatmap-title">התפלגות השאלות</h3>
+                <button id="heatmap-close" class="heatmap-close">✕</button>
+            </div>
+            <div class="heatmap-legend">
+                <span class="legend-item"><span class="legend-swatch legend-green"></span>מושלם</span>
+                <span class="legend-item"><span class="legend-swatch legend-yellow"></span>בינוני</span>
+                <span class="legend-item"><span class="legend-swatch legend-red"></span>צריך תרגול</span>
+            </div>
+            <div id="heatmap-grid" class="heatmap-grid"></div>
+            <p class="heatmap-note">הצבעים יחסיים לשאלות הקשות ביותר כרגע</p>
         </div>
     </div>
 
