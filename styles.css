@@ -715,6 +715,82 @@ body {
 }
 
 /* ========================================
+   TIMER BAR
+======================================== */
+
+.timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card-bg);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.timer-left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.timer-display {
+    font-size: 2rem;
+    font-weight: 800;
+    min-width: 2.2ch;
+    text-align: center;
+    transition: color 0.4s ease;
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-fast   { color: var(--success); }
+.timer-medium { color: var(--warning); }
+.timer-slow   { color: var(--error);   }
+
+.timer-unit {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.pause-btn {
+    padding: 0.45rem 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 3px 10px rgba(108, 92, 231, 0.3);
+}
+
+.pause-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
+
+.pause-btn:active {
+    transform: translateY(0);
+}
+
+.pause-btn.is-paused {
+    background: linear-gradient(135deg, var(--success), #00a884);
+    box-shadow: 0 3px 10px rgba(0, 184, 148, 0.3);
+}
+
+/* Dim the question card and number pad while paused */
+.question-card.is-paused,
+.number-pad.is-paused {
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ========================================
    HEATMAP BUTTON
 ======================================== */
 

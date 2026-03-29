@@ -1091,8 +1091,13 @@ const gameState = {
     currentJ: 0,
     correctAnswer: 0,
     attempts: 0,
-    questionStartTime: 0
+    questionStartTime: 0,
+    isPaused: false,
+    pausedDuration: 0,   // total ms spent paused for current question
+    pauseStart: 0        // Date.now() when the current pause began
 };
+
+let timerInterval = null;
 
 // ========================================
 // WEIGHT MATRIX & PERSISTENCE
@@ -1331,6 +1336,8 @@ const elements = {
     streakMilestone: document.getElementById('streak-milestone'),
     numberPad: document.querySelector('.number-pad'),
     soundToggleBtn: document.getElementById('sound-toggle-btn'),
+    timerDisplay: document.getElementById('timer-display'),
+    pauseBtn: document.getElementById('pause-btn'),
     heatmapBtn: document.getElementById('heatmap-btn'),
     heatmapModal: document.getElementById('heatmap-modal'),
     heatmapClose: document.getElementById('heatmap-close'),
@@ -1341,6 +1348,67 @@ const elements = {
 // GAME FUNCTIONS
 // ========================================
 
+// ========================================
+// TIMER
+// ========================================
+
+function getElapsedSeconds() {
+    const pauseOffset = gameState.isPaused
+        ? gameState.pausedDuration + (Date.now() - gameState.pauseStart)
+        : gameState.pausedDuration;
+    return (Date.now() - gameState.questionStartTime - pauseOffset) / 1000;
+}
+
+function updateTimerDisplay() {
+    const secs = Math.floor(getElapsedSeconds());
+    elements.timerDisplay.textContent = secs;
+    elements.timerDisplay.classList.remove('timer-fast', 'timer-medium', 'timer-slow');
+    if (secs < 5) {
+        elements.timerDisplay.classList.add('timer-fast');
+    } else if (secs < 10) {
+        elements.timerDisplay.classList.add('timer-medium');
+    } else {
+        elements.timerDisplay.classList.add('timer-slow');
+    }
+}
+
+function startTimer() {
+    stopTimer();
+    updateTimerDisplay();
+    timerInterval = setInterval(updateTimerDisplay, 200);
+}
+
+function stopTimer() {
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function pauseTimer() {
+    if (gameState.isPaused) return;
+    gameState.isPaused = true;
+    gameState.pauseStart = Date.now();
+    stopTimer();
+    updateTimerDisplay();
+    elements.pauseBtn.textContent = '▶ המשך';
+    elements.pauseBtn.classList.add('is-paused');
+    elements.questionCard.classList.add('is-paused');
+    elements.numberPad.classList.add('is-paused');
+}
+
+function resumeTimer() {
+    if (!gameState.isPaused) return;
+    gameState.pausedDuration += Date.now() - gameState.pauseStart;
+    gameState.pauseStart = 0;
+    gameState.isPaused = false;
+    elements.pauseBtn.textContent = '⏸ השהה';
+    elements.pauseBtn.classList.remove('is-paused');
+    elements.questionCard.classList.remove('is-paused');
+    elements.numberPad.classList.remove('is-paused');
+    startTimer();
+}
+
 function generateNewQuestion() {
     const q = pickQuestion();
     gameState.currentA = q.a;
@@ -1349,7 +1417,11 @@ function generateNewQuestion() {
     gameState.currentJ = q.j;
     gameState.correctAnswer = q.a * q.b;
     gameState.attempts = 0;
+    gameState.isPaused = false;
+    gameState.pausedDuration = 0;
+    gameState.pauseStart = 0;
     gameState.questionStartTime = Date.now();
+    startTimer();
     
     elements.numA.textContent = gameState.currentA;
     elements.numB.textContent = gameState.currentB;
@@ -1424,7 +1496,8 @@ function checkAnswer() {
         gameState.score = Math.floor(gameState.score);
 
         // Update weight matrix and persist state
-        const responseTimeSec = (Date.now() - gameState.questionStartTime) / 1000;
+        const responseTimeSec = getElapsedSeconds();
+        stopTimer();
         const wrongAttempts = gameState.attempts - 1; // attempts already incremented above
         updateWeight(gameState.currentI, gameState.currentJ, responseTimeSec, wrongAttempts);
         saveState();
@@ -1632,6 +1705,11 @@ elements.soundToggleBtn.addEventListener('click', () => {
             playMelody([[523, 100], [659, 100], [784, 100]], 'sine');
         }
     }, 100);
+});
+
+// Pause / resume
+elements.pauseBtn.addEventListener('click', () => {
+    if (gameState.isPaused) resumeTimer(); else pauseTimer();
 });
 
 // Heatmap open / close
