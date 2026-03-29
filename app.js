@@ -1103,7 +1103,7 @@ let timerInterval = null;
 // WEIGHT MATRIX & PERSISTENCE
 // ========================================
 
-const TARGET_TIME = 5; // seconds — considered "fast"
+const TARGET_TIME = 10; // seconds — considered "fast" for a child
 const STORAGE_KEY = 'abigail_multitable_v1';
 
 // ========================================
@@ -1363,9 +1363,9 @@ function updateTimerDisplay() {
     const secs = Math.floor(getElapsedSeconds());
     elements.timerDisplay.textContent = secs;
     elements.timerDisplay.classList.remove('timer-fast', 'timer-medium', 'timer-slow');
-    if (secs < 5) {
+    if (secs < 10) {
         elements.timerDisplay.classList.add('timer-fast');
-    } else if (secs < 10) {
+    } else if (secs < 20) {
         elements.timerDisplay.classList.add('timer-medium');
     } else {
         elements.timerDisplay.classList.add('timer-slow');
