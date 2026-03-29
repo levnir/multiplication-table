@@ -28,11 +28,11 @@
     --number-gradient-2: #f5576c;
     
     /* Spacing */
-    --space-xs: 0.3rem;
-    --space-sm: 0.5rem;
-    --space-md: 0.75rem;
-    --space-lg: 1rem;
-    --space-xl: 1.5rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.9rem;
+    --space-md: 1.4rem;
+    --space-lg: 2rem;
+    --space-xl: 2.8rem;
     
     /* Border radius */
     --radius-sm: 12px;
@@ -166,8 +166,8 @@ body {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 400px;
-    padding: var(--space-sm);
+    max-width: 480px;
+    padding: var(--space-md);
 }
 
 /* ========================================
@@ -212,8 +212,8 @@ body {
 }
 
 .mascot img {
-    max-width: 150px;
-    max-height: 18vh;
+    max-width: 220px;
+    max-height: 28vh;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -227,7 +227,7 @@ body {
 }
 
 .welcome-title {
-    font-size: 1.6rem;
+    font-size: 2.4rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
@@ -237,7 +237,7 @@ body {
 }
 
 .welcome-subtitle {
-    font-size: 1.3rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: var(--secondary);
     margin-bottom: var(--space-sm);
@@ -250,7 +250,7 @@ body {
 }
 
 .welcome-text {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-secondary);
     margin-bottom: var(--space-lg);
 }
@@ -342,7 +342,7 @@ body {
 }
 
 .toggle-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     color: white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -400,17 +400,17 @@ body {
 }
 
 .stat-icon {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
 }
 
 .stat-label {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
     font-weight: 500;
 }
 
 .stat-value {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: var(--primary);
 }
@@ -454,7 +454,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--space-xs);
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: var(--space-sm);
@@ -476,7 +476,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    font-size: 1.8rem;
+    font-size: 2.8rem;
     font-weight: 800;
     margin-bottom: var(--space-md);
     flex-wrap: wrap;
@@ -572,7 +572,7 @@ body {
     gap: var(--space-xs);
     padding: var(--space-sm);
     border-radius: var(--radius-md);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     animation: slideUp 0.3s ease;
 }
@@ -619,9 +619,9 @@ body {
 }
 
 .num-btn {
-    padding: 0.35rem;
+    padding: 0.7rem;
     font-family: inherit;
-    font-size: 0.95rem;
+    font-size: 1.3rem;
     font-weight: 700;
     background: var(--card-bg);
     touch-action: manipulation; /* Disable 300ms touch delay */
@@ -736,7 +736,7 @@ body {
 }
 
 .timer-display {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     font-weight: 800;
     min-width: 2.2ch;
     text-align: center;
@@ -749,19 +749,19 @@ body {
 .timer-slow   { color: var(--error);   }
 
 .timer-unit {
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-secondary);
 }
 
 .pause-btn {
-    padding: 0.3rem 0.7rem;
+    padding: 0.45rem 1rem;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
     border: none;
     border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -950,31 +950,56 @@ body {
    RESPONSIVE
 ======================================== */
 
-@media (max-width: 400px) {
+/* Small phones (portrait ≤ 480px wide) */
+@media (max-width: 480px) {
+    :root {
+        --space-xs: 0.3rem;
+        --space-sm: 0.6rem;
+        --space-md: 1rem;
+        --space-lg: 1.4rem;
+        --space-xl: 2rem;
+    }
+
     .container {
-        padding: var(--space-xs);
-    }
-
-    .question-equation {
-        font-size: 1.5rem;
-    }
-
-    .welcome-title {
-        font-size: 1.3rem;
+        padding: var(--space-sm);
     }
 
     .mascot img {
-        max-width: 120px;
-        max-height: 15vh;
+        max-width: 160px;
+        max-height: 22vh;
+    }
+
+    .welcome-title {
+        font-size: 1.9rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.4rem;
+    }
+
+    .welcome-text {
+        font-size: 0.9rem;
+    }
+
+    .question-equation {
+        font-size: 2.2rem;
     }
 
     .num-btn {
-        padding: 0.3rem;
-        font-size: 0.85rem;
+        padding: 0.45rem;
+        font-size: 1.05rem;
     }
+
+    .stat-icon  { font-size: 1rem; }
+    .stat-label { font-size: 0.65rem; }
+    .stat-value { font-size: 0.95rem; }
+
+    .timer-display { font-size: 1.3rem; }
+    .pause-btn     { font-size: 0.85rem; padding: 0.35rem 0.7rem; }
 }
 
-@media (max-height: 600px) {
+/* Short screens (landscape phone or small tablet ≤ 680px tall) */
+@media (max-height: 680px) {
     .welcome-content {
         padding: var(--space-md);
     }
@@ -984,8 +1009,8 @@ body {
     }
 
     .mascot img {
-        max-width: 100px;
-        max-height: 12vh;
+        max-width: 130px;
+        max-height: 14vh;
     }
 
     .question-card {
@@ -993,7 +1018,16 @@ body {
     }
 
     .question-equation {
-        font-size: 1.6rem;
+        font-size: 2rem;
         margin-bottom: var(--space-sm);
+    }
+
+    .stats-bar,
+    .timer-bar {
+        margin-bottom: var(--space-xs);
+    }
+
+    .sound-toggle {
+        margin-bottom: var(--space-xs);
     }
 }
