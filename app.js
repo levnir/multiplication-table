@@ -1101,6 +1101,24 @@ const gameState = {
 const TARGET_TIME = 5; // seconds — considered "fast"
 const STORAGE_KEY = 'abigail_multitable_v1';
 
+// ========================================
+// FIREBASE
+// ========================================
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAdgAkFDbGfANAoBgsQFA_tsYAdVtM27xY",
+    authDomain: "multiplication-table-129e3.firebaseapp.com",
+    databaseURL: "https://multiplication-table-129e3-default-rtdb.firebaseio.com",
+    projectId: "multiplication-table-129e3",
+    storageBucket: "multiplication-table-129e3.firebasestorage.app",
+    messagingSenderId: "940068097753",
+    appId: "1:940068097753:web:bab5a4626645cccf08b8c8"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const DB_PATH = 'abigail';
+
 // Per-number initial difficulty (index 0 = number 1, index 9 = number 10)
 // 6, 7, 8, 9 are hardest; 1, 2 are easiest
 const INITIAL_DIFFICULTY = [1, 1.2, 1.5, 1.8, 2.2, 3.0, 4.0, 4.5, 4.5, 2.5];
@@ -1126,38 +1144,51 @@ function saveState() {
         streak: gameState.streak,
         correctCount: gameState.correctCount
     };
+    // Keep localStorage as local cache for offline use
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (e) {
-        console.warn('saveState failed:', e);
+        console.warn('localStorage save failed:', e);
     }
+    // Write to Firebase (fire-and-forget)
+    db.ref(DB_PATH).set(payload).catch(e => console.warn('Firebase save failed:', e));
 }
 
-function loadState() {
+function restoreData(data) {
+    if (
+        Array.isArray(data.weights) &&
+        data.weights.length === 10 &&
+        data.weights.every(row => Array.isArray(row) && row.length === 10 &&
+            row.every(v => typeof v === 'number' && isFinite(v)))
+    ) {
+        weights = data.weights;
+    } else {
+        initWeights();
+    }
+    if (typeof data.score === 'number')        gameState.score        = data.score;
+    if (typeof data.streak === 'number')       gameState.streak       = data.streak;
+    if (typeof data.correctCount === 'number') gameState.correctCount = data.correctCount;
+}
+
+async function loadState() {
+    // Try Firebase first (works across all devices)
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-            initWeights();
+        const snapshot = await db.ref(DB_PATH).get();
+        if (snapshot.exists()) {
+            restoreData(snapshot.val());
+            console.log('✅ State loaded from Firebase');
             return;
         }
-        const data = JSON.parse(raw);
+    } catch (e) {
+        console.warn('Firebase load failed, trying localStorage:', e);
+    }
 
-        // Validate that weights is a proper 10×10 array of numbers
-        if (
-            Array.isArray(data.weights) &&
-            data.weights.length === 10 &&
-            data.weights.every(row => Array.isArray(row) && row.length === 10 &&
-                row.every(v => typeof v === 'number' && isFinite(v)))
-        ) {
-            weights = data.weights;
-        } else {
-            initWeights();
-        }
-
-        if (typeof data.score === 'number')        gameState.score        = data.score;
-        if (typeof data.streak === 'number')       gameState.streak       = data.streak;
-        if (typeof data.correctCount === 'number') gameState.correctCount = data.correctCount;
-
+    // Fallback to localStorage (offline / Firebase unavailable)
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) { initWeights(); return; }
+        restoreData(JSON.parse(raw));
+        console.log('✅ State loaded from localStorage (offline fallback)');
     } catch (e) {
         console.warn('loadState failed, resetting:', e);
         initWeights();
@@ -1418,7 +1449,7 @@ function checkAnswer() {
     }
 }
 
-function startGame() {
+async function startGame() {
     // Initialize audio on user interaction
     initAudio();
     playButtonClick();
@@ -1426,8 +1457,8 @@ function startGame() {
     // Preload high-quality sounds in background
     preloadSounds();
 
-    // Load persisted weights and stats (falls back to initWeights on failure)
-    loadState();
+    // Load persisted weights and stats (Firebase → localStorage fallback → fresh init)
+    await loadState();
 
     elements.welcomeScreen.classList.remove('active');
     elements.gameScreen.classList.add('active');
